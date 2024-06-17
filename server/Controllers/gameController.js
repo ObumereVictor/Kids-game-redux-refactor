@@ -28,7 +28,7 @@ const createGame = async (request, response) => {
     return { gid: index, game };
   });
   const newGame = await GameModel.create({ game, difficulty });
-  console.log(newGame);
+  // console.log(newGame);
 
   return response
     .status(StatusCodes.CREATED)
@@ -104,7 +104,7 @@ const getGame = async (request, response) => {
       game,
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 };
 
@@ -118,7 +118,7 @@ const submitGame = async (request, response) => {
   // console.log(findGame);
   findGame = findGame.game.map((game) => [...game.game]);
   findGame = findGameArray.concat(...findGame).join("");
-  console.log({ findGame, userAnswer });
+  // console.log({ findGame, userAnswer });
   // return response.status(StatusCodes.OK);
   if (userAnswer !== findGame) {
     return response

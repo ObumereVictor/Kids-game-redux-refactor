@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   loginUserThunk,
   registerUserThunk,
@@ -166,7 +166,6 @@ const UserSlice = createSlice({
     });
     builder.addCase(resetUserPassword.fulfilled, (state, { payload }) => {
       toast.success(payload.msg);
-      console.log(payload.msg);
       state.loading = false;
       state.openModal = {
         ...state.openModal,
@@ -187,7 +186,6 @@ const UserSlice = createSlice({
     });
     builder.addCase(loginUser.fulfilled, (state, { payload }) => {
       state.loading = false;
-      console.log(payload);
       let {
         verified,
         email,
@@ -243,7 +241,7 @@ const UserSlice = createSlice({
     });
     builder.addCase(uploadImage.pending, (state) => {});
     builder.addCase(uploadImage.fulfilled, (state, { payload }) => {
-      const { msg, image } = payload;
+      const { image } = payload;
       // toast.success(msg);
       state = state.user.profilePic = image;
       // addUserToLocalStorage(state.user);
@@ -257,12 +255,10 @@ const UserSlice = createSlice({
       state = state.loading = true;
     });
     builder.addCase(completeProfile.fulfilled, (state, { payload }) => {
-      console.log(current(state).user);
       state = state.loading = false;
       // removeUserFromLocalStorage();
-      const user = { ...state.user, difficulty: payload.difficulty };
+      // const user = { ...state.user, difficulty: payload.difficulty };
       // addUserToLocalStorage(state.user);
-      console.log(payload);
     });
     builder.addCase(completeProfile.rejected, (state, { payload }) => {
       toast.error(payload);

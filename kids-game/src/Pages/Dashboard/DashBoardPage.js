@@ -23,7 +23,6 @@ const DashBoardPage = () => {
             <>
               <button
                 onClick={() => {
-                  console.log("Helllo");
                   dispatch(getGame());
                   navigate("/play-game");
                 }}
@@ -37,7 +36,6 @@ const DashBoardPage = () => {
           ) : (
             <button
               onClick={() => {
-                console.log("Helllo");
                 dispatch(getGame());
                 navigate("/play-game");
               }}

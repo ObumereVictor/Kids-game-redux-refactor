@@ -68,17 +68,17 @@ const registerUser = async (request, response) => {
     const token = jwt.sign({ email }, `${process.env.EPASSWORD}`, {
       expiresIn: 60 * 20,
     });
-    console.log(token);
+    // console.log(token);
 
     const sendEmail = await sendVerificationMail({ email }, token);
-    console.log(sendEmail);
+    // console.log(sendEmail);
 
     const newUser = await UserModel.create({
       ...user,
       role,
       password: hashedPassword,
     });
-    console.log(newUser);
+    // console.log(newUser);
     const { _id, email: tempEmail, verified } = newUser;
 
     // CREATING TEMP USER
@@ -88,14 +88,12 @@ const registerUser = async (request, response) => {
     // HASHING THE UNIQUE STRING
 
     // let uniqueString = uuidv4() + _id;
-
-    console.log("Hello");
     return response
       .status(StatusCodes.CREATED)
       .json({ msg: "Registration Successful" });
     // CREATING TEMP USER
   } catch (error) {
-    console.log({ error });
+    // console.log({ error });
 
     // mail is sending but there is name error
 
@@ -162,7 +160,7 @@ const sendResetPasswordEmail = async (request, response) => {
 
   // CHECKING IF USER EXIST
   const user = await UserModel.findOne({ email });
-  console.log(user);
+  // console.log(user);
   if (!user) {
     return response
       .status(StatusCodes.OK)
@@ -172,7 +170,6 @@ const sendResetPasswordEmail = async (request, response) => {
   const { _id } = user;
 
   await sendResetPasswordLink({ _id, email }, response);
-  console.log("Promise");
 
   return response
     .status(StatusCodes.OK)
@@ -224,7 +221,7 @@ const signIn = async (request, response, next) => {
 
   email = email.toLowerCase().trim();
   password = password.trim();
-  console.log(email);
+  // console.log(email);
 
   if (!email || !password) {
     return response.status(StatusCodes.NOT_FOUND).json({
@@ -287,7 +284,6 @@ const signIn = async (request, response, next) => {
     difficulty,
     role,
   };
-  console.log("Hii");
 
   // IS USER VERIFIED
   const isUserVerified = await TempUserModel.findOne({ userId: _id });
@@ -300,7 +296,6 @@ const signIn = async (request, response, next) => {
       ...userData,
     });
   }
-  console.log("Hello");
   userData = {
     ...userData,
     token,
@@ -371,7 +366,7 @@ const updatePassword = async (request, response) => {
   // COMPARE TOKEN
   try {
     const isTokenOk = jwt.verify(token, process.env.JWT_KEY);
-    console.log(isTokenOk);
+    // console.log(isTokenOk);
 
     const { _id, email } = isTokenOk;
     const saltRounds = Number(process.env.SALT_ROUNDS);
@@ -382,12 +377,12 @@ const updatePassword = async (request, response) => {
       { password: hashedUpdatedPassword }
     );
     await user.save();
-    console.log(user.username);
+    // console.log(user.username);
     return response
       .status(StatusCodes.CREATED)
       .json({ status: "Success", msg: "Password Changed!" });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
 
     // EXPIRED JWT
     if (error.message === "jwt expired") {

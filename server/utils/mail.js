@@ -11,24 +11,24 @@ const jwt = require("jsonwebtoken");
 const sendVerificationMail = async function ({ email }, uniqueString) {
   const currentURL = url;
   //  HOTMAIL TRANSPORT
-  // const transporter = nodemailer.createTransport({
-  //   service: "hotmail",
-  //   auth: {
-  //     user: process.env.EMAIL,
-  //     pass: process.env.PASSWORD,
-  //   },
-  // });
-
-  // ethereal transport
   const transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false, // Use `true` for port 465, `false` for all other ports
+    service: "hotmail",
     auth: {
-      user: process.env.EEMAIL,
-      pass: process.env.EPASSWORD,
+      user: process.env.EMAIL,
+      pass: process.env.PASSWORD,
     },
   });
+
+  // ethereal transport
+  // const transporter = nodemailer.createTransport({
+  //   host: "smtp.ethereal.email",
+  //   port: 587,
+  //   secure: false, // Use `true` for port 465, `false` for all other ports
+  //   auth: {
+  //     user: process.env.EEMAIL,
+  //     pass: process.env.EPASSWORD,
+  //   },
+  // });
 
   const mailOptions = {
     from: process.env.EEMAIL,
@@ -52,14 +52,7 @@ const sendVerificationMail = async function ({ email }, uniqueString) {
 
     return mail;
   } catch (error) {
-    console.log("Mailerror" + error);
     throw error;
-
-    // response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-    //   status: "Failed",
-    //   msg: `Server Error. Please try again in some minutes!`,
-    //   errorType: "serverError",
-    // });
   }
 };
 
@@ -72,7 +65,6 @@ const resendVerficationEmail = async (request, response) => {
   const { _id: userId, email: userEmail } = currentUser;
 
   const currentTempUser = await TempUserModel.findOneAndUpdate({ userId });
-  // console.log(currentTempUser);
   if (!currentTempUser) return;
   const uniqueString = currentTempUser.uniqueString;
   await sendVerificationMail(
@@ -99,22 +91,22 @@ const sendResetPasswordLink = async ({ _id, email }, response) => {
   let data = { email, _id };
   let token = jwt.sign(data, process.env.JWT_KEY, { expiresIn: 60 * 10 });
 
-  const transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false, // Use `true` for port 465, `false` for all other ports
-    auth: {
-      user: "leo.mayer28@ethereal.email",
-      pass: "WM96nkaF49ShpY4mrE",
-    },
-  });
   // const transporter = nodemailer.createTransport({
-  //   service: "hotmail",
+  //   host: "smtp.ethereal.email",
+  //   port: 587,
+  //   secure: false, // Use `true` for port 465, `false` for all other ports
   //   auth: {
-  //     user: process.env.EMAIL,
-  //     pass: process.env.PASSWORD,
+  //     user: "leo.mayer28@ethereal.email",
+  //     pass: "WM96nkaF49ShpY4mrE",
   //   },
   // });
+  const transporter = nodemailer.createTransport({
+    service: "hotmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASSWORD,
+    },
+  });
 
   const mailOptions = {
     from: process.env.EMAIL,
@@ -123,7 +115,7 @@ const sendResetPasswordLink = async ({ _id, email }, response) => {
     html: `<div> <h2>Password Reset</h2>
 
     <p>Click the link to reset your password 
-    <a href=${frontEndUrl + "/reset-password/" + token} target= _blank>Link</a>
+    <a href=${frontEndUrl + "/reset-password/" + token} target="_blank">Link</a>
     <p>Link expires in 10 minutes</p>
     If you didn't initiate password reset for your account. Ignore this message</p>
     </div>`,

@@ -41,7 +41,6 @@ const CompleteProfilePage = () => {
     event.preventDefault();
     const image = event.target.files[0];
     formData.append("profilepic", image);
-    console.log({ image, formData });
     dispatch(uploadImage(formData));
   };
   // HANDLE USER INPUT ONCHANGE
@@ -58,7 +57,6 @@ const CompleteProfilePage = () => {
     if (name === "Skip") {
       return navigate("/dashboard");
     } else if (name === "Skip" && profileEditing) {
-      console.log("Hello");
       dispatch(handleEditProfile());
       return;
     } else {
